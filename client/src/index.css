@@ -6,6 +6,10 @@ body {
   text-align: center;
 }
 
+h3{
+  color: cadetblue;
+}
+
 .movie-card {
   background-color: #fff;
   border: 0;
@@ -80,4 +84,12 @@ body {
 .movie-warning {
   color: red;
   text-align: center;
+}
+
+#updateCard{
+  width: 60%;
+  margin: auto;
+}
+#updateBtn{
+  margin-top: 20px;
 }

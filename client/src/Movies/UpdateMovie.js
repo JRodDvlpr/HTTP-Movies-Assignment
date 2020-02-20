@@ -1,31 +1,47 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 
+
+//UI Library
+import {Card, Input, Button, Form} from 'antd';
+
+const movie = { 
+    id: null,
+    title: '',
+    director: '',
+    metascore: '',
+    stars: []
+}
+
 const UpdateMovie = (props) => {
 
     // State input
     const id = props.match.params;
-
-    const movie = { 
-        id: null,
-        title: '',
-        director: '',
-        metascore: '',
-        stars: []
-    }
-
+ 
     const [update, setUpdate] =useState(movie);
 
     // Get Data from API and set the state
     useEffect(() => {
         axios.get(`http://localhost:5000/api/movies/${id}`)
         .then(res => setUpdate(res.data))
-        
         .catch(err => console.log(err));
     }, [id])
 
 
     console.log(id)
+    
+    const handleSubmit = (event) => {
+        console.log(movie)
+        axios.put(`http://localhost:5000/api/movies/${update.id}`, update)
+        .then(res =>{
+            console.log(res);
+            setUpdate(movie)
+            props.history.push('/');
+        })
+        .catch(error => {console.log(error);
+        })
+
+    }
 
     const handleChange = (event) => {
         setUpdate({...update, [event.target.value]:event.target.value})
@@ -37,29 +53,15 @@ const UpdateMovie = (props) => {
             stars: [event.target.value]
         })
     }
-    
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        console.log(movie)
-        axios.put(`http://localhost:5000/api/movies/${id}`, update)
-        .then(res =>{
-            console.log(res);
-            setUpdate(movie)
-            props.history.push('/');
-        })
-        .catch(error => {console.log(error);
-        })
-
-    }
 
     console.log(update)
 
     return(
-        <div>
+        <Card id="updateCard">
             <h1 style={{textAlign:'center'}}>Update your movie</h1>
-            <form onSubmit={handleSubmit}>
-                <label>Title:</label>
-                <input type='text'
+            <Form onSubmit={handleSubmit}>
+                <h3>Title: </h3>
+                <Input type='text'
                 placeholder='Title'
                 name='title'
                 value={update.title}
@@ -67,8 +69,8 @@ const UpdateMovie = (props) => {
                 />
             <br />
 
-                <label>Director:</label>
-                <input type="text" 
+                <h3>Director: </h3>
+                <Input type="text" 
                placeholder="Director" 
                name="director"
                value={update.director}
@@ -76,8 +78,8 @@ const UpdateMovie = (props) => {
 
             <br />
 
-                <label>Meta-Score:</label>
-                <input type="text" 
+                <h3>Meta-Score: </h3>
+                <Input type="text" 
                placeholder="Meta score" 
                name="metascore" 
                value={update.metascore} 
@@ -85,18 +87,18 @@ const UpdateMovie = (props) => {
 
             <br />
 
-                <label>Stars:</label>           
-                <input 
+                <h3>Stars: </h3>           
+                <Input 
                 type='text'
                 name='stars'
-                placeholder='stars'
+                placeholder='Actors'
                 value={update.stars}
                 onChange={handleStars}
             />
-        <button>Update</button>                   
+            <Button id='updateBtn'>Update</Button>                   
 
-            </form>
-        </div>
+            </Form>
+        </Card>
     )
 }
 
